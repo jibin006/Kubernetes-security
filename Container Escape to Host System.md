@@ -172,6 +172,19 @@ To prevent this class of attack:
 
 ✔ Rotate kubeconfig credentials
 
+## Things i Learned:
+Entry → compromised privileged pod
+
+Runtime → host filesystem + kernel exposed
+
+Blast radius → pod → node → kubelet → cluster
+
+Detection → runtime tools / audit logs
+
+Containment → quarantine node / cordon / isolate
+
+Prevention → Pod Security + block hostPath + block privileged pods
+
 🔖 References
 
 Misuse of Linux capabilities in containers
