@@ -60,6 +60,7 @@ Use it to query and control the cluster
 Check container capabilities and privileges:
 
 capsh --print
+
 mount
 
 <img width="934" height="308" alt="image" src="https://github.com/user-attachments/assets/a5fb8456-16c4-4a15-a0d1-185ba44bd97d" />
