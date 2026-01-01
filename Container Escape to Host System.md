@@ -14,6 +14,9 @@ Access Kubernetes administrative configuration
 
 Use it to interact with the cluster with elevated privileges
 
+<img width="1061" height="507" alt="image" src="https://github.com/user-attachments/assets/ad6369b8-4223-46b5-af61-01f5399455ef" />
+
+
 🎯 Learning Objectives
 
 By the end of this lab, you will be able to:
