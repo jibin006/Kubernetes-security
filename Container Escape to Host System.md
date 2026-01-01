@@ -103,7 +103,7 @@ but now you control the node disk — which is already a critical compromise.
 
 <img width="784" height="71" alt="image" src="https://github.com/user-attachments/assets/e69b28ce-1c7d-4225-a525-6f694c2636f7" />
 
-
+Inside the pod I was root only within container namespaces. Because the pod was privileged and had a hostPath mount, I could pivot using chroot into the host filesystem, effectively becoming host root. That’s how pod compromise became node dominance.
 
 4️⃣ Inspect Running Pods From the Host Runtime
 crictl pods
